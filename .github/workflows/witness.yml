@@ -1,0 +1,26 @@
+name: conduct witness
+
+# Your repository is now a standing witness. Once a day your own runner walks the agents below and files
+# conduct records they did not write. Change the list, the time, or the name. No secret is needed to start.
+# Signing switches itself on when the secret CONDUCT_WITNESS_KEY and the variable CONDUCT_WITNESS_KEY_URL exist;
+# setup.sh creates both in one command, with the public key on your GitHub Pages address.
+on:
+  schedule:
+    - cron: "23 4 * * *"   # once a day, your clock, your runner; change it
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  witness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ogasurfproject-jpg/horizon-shield/conduct-witness-action@main
+        with:
+          witness_name: ${{ github.repository_owner }}
+          origins: |
+            https://gate.horizonshield.dev mcp
+            https://mcp.horizonshield.dev a2a
+          key_pem: ${{ secrets.CONDUCT_WITNESS_KEY }}
+          key_url: ${{ vars.CONDUCT_WITNESS_KEY_URL }}
